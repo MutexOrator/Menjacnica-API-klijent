@@ -10,9 +10,12 @@ import javax.swing.border.EmptyBorder;
 import menjacnica.Menjacnica;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MenjacnicaGUI extends JFrame {
 
@@ -23,10 +26,11 @@ public class MenjacnicaGUI extends JFrame {
 	private JComboBox comboBoxDesni;
 	private JLabel lblNewLabel_2;
 	private JLabel label;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField textFieldLevi;
+	private JTextField textFieldDesni;
 	private JButton btnKonvertuj;
 	
+	private static Menjacnica m;
 
 	/**
 	 * Launch the application.
@@ -35,7 +39,8 @@ public class MenjacnicaGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Menjacnica.fill();
+					m =  new Menjacnica();
+					m.fill();
 					MenjacnicaGUI frame = new MenjacnicaGUI();
 					frame.setVisible(true);
 					
@@ -62,8 +67,8 @@ public class MenjacnicaGUI extends JFrame {
 		contentPane.add(getComboBoxDesni());
 		contentPane.add(getLblNewLabel_2());
 		contentPane.add(getLabel());
-		contentPane.add(getTextField());
-		contentPane.add(getTextField_1());
+		contentPane.add(getTextFieldLevi());
+		contentPane.add(getTextFieldDesni());
 		contentPane.add(getBtnKonvertuj());
 		for (int i = 0; i < Menjacnica.d.size(); i++) {
 			comboBoxLevi.addItem(Menjacnica.d.get(i).getName());
@@ -114,27 +119,67 @@ public class MenjacnicaGUI extends JFrame {
 		}
 		return label;
 	}
-	private JTextField getTextField() {
-		if (textField == null) {
-			textField = new JTextField();
-			textField.setBounds(66, 148, 128, 20);
-			textField.setColumns(10);
+	private JTextField getTextFieldLevi() {
+		if (textFieldLevi == null) {
+			textFieldLevi = new JTextField();
+			textFieldLevi.setBounds(66, 148, 128, 20);
+			textFieldLevi.setColumns(10);
 		}
-		return textField;
+		return textFieldLevi;
 	}
-	private JTextField getTextField_1() {
-		if (textField_1 == null) {
-			textField_1 = new JTextField();
-			textField_1.setBounds(249, 148, 128, 20);
-			textField_1.setColumns(10);
+	private JTextField getTextFieldDesni() {
+		if (textFieldDesni == null) {
+			textFieldDesni = new JTextField();
+			textFieldDesni.setBounds(249, 148, 128, 20);
+			textFieldDesni.setColumns(10);
 		}
-		return textField_1;
+		return textFieldDesni;
 	}
 	private JButton getBtnKonvertuj() {
 		if (btnKonvertuj == null) {
 			btnKonvertuj = new JButton("Konvertuj");
+			btnKonvertuj.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					try {
+						konvertuj();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
 			btnKonvertuj.setBounds(175, 204, 89, 23);
 		}
 		return btnKonvertuj;
+	}
+	private void konvertuj() throws Exception {
+		
+			try {
+				String s1 = comboBoxLevi.getSelectedItem().toString();
+				String s2 = comboBoxDesni.getSelectedItem().toString();
+				String v1 = new String();
+				String v2 = new String();
+				for (int i = 0; i < m.d.size(); i++) {
+					if(s1.equals(m.d.get(i).getName()))
+						v1 = m.d.get(i).getCurrencyId();
+					if(s2.equals(m.d.get(i).getName()))
+						v2 = m.d.get(i).getCurrencyId();
+				}
+				Double val = Double.parseDouble(textFieldLevi.getText());
+				Double r = m.vratiKurs(v1, v2);
+				if(r == -1) {
+					JOptionPane.showMessageDialog(null, "Ne postoje rezultati za zadate valute",
+							"Paznja", JOptionPane.ERROR_MESSAGE);
+				}
+				textFieldDesni.setText(String.valueOf(val*r));
+//				System.out.println(v1);
+//				System.out.println(v2);
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, "Unesite iznos za konverziju",
+						"Paznja", JOptionPane.INFORMATION_MESSAGE);
+			}
+		
+			
+		
 	}
 }
