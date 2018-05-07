@@ -1,0 +1,32 @@
+[
+  {
+    "datumVreme": "07-05-2018 22-59-55.000044",
+    "izValuta": "AUD",
+    "uValuta": "BDT",
+    "kurs": 63.47904
+  },
+  {
+    "datumVreme": "07-05-2018 23-00-01.000661",
+    "izValuta": "SYP",
+    "uValuta": "BDT",
+    "kurs": 0.163968
+  },
+  {
+    "datumVreme": "07-05-2018 23-00-18.000884",
+    "izValuta": "GBP",
+    "uValuta": "UZS",
+    "kurs": 10886.667293
+  },
+  {
+    "datumVreme": "07-05-2018 23-00-24.000744",
+    "izValuta": "KPW",
+    "uValuta": "UZS",
+    "kurs": 8.922219
+  },
+  {
+    "datumVreme": "07-05-2018 23-03-31.000173",
+    "izValuta": "BRL",
+    "uValuta": "KHR",
+    "kurs": 1137.96299
+  }
+]
