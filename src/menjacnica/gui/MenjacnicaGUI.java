@@ -1,29 +1,21 @@
 package menjacnica.gui;
 
 
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
-import menjacnica.Menjacnica;
+
+import menjacnica.gui.kontroler.GUIKontroler;
+
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.awt.event.ActionEvent;
 
 public class MenjacnicaGUI extends JFrame {
@@ -39,26 +31,10 @@ public class MenjacnicaGUI extends JFrame {
 	private JTextField textFieldDesni;
 	private JButton btnKonvertuj;
 
-	private static Menjacnica m;
-
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					m = new Menjacnica();
-					m.fill();
-					MenjacnicaGUI frame = new MenjacnicaGUI();
-					frame.setVisible(true);
 
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -79,10 +55,7 @@ public class MenjacnicaGUI extends JFrame {
 		contentPane.add(getTextFieldLevi());
 		contentPane.add(getTextFieldDesni());
 		contentPane.add(getBtnKonvertuj());
-		for (int i = 0; i < Menjacnica.d.size(); i++) {
-			comboBoxLevi.addItem(Menjacnica.d.get(i).getName());
-			comboBoxDesni.addItem(Menjacnica.d.get(i).getName());
-		}
+		GUIKontroler.fillComboBox(comboBoxLevi,comboBoxDesni);
 
 	}
 
@@ -158,7 +131,8 @@ public class MenjacnicaGUI extends JFrame {
 			btnKonvertuj.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						konvertuj();
+						textFieldDesni.setText(GUIKontroler.konvertuj(comboBoxLevi.getSelectedItem().toString(),comboBoxDesni.getSelectedItem().toString()
+								,textFieldLevi.getText()));
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -170,64 +144,5 @@ public class MenjacnicaGUI extends JFrame {
 		return btnKonvertuj;
 	}
 
-	private void konvertuj() throws Exception {
-
-		try {
-			Date d = new Date();
-			SimpleDateFormat simple = new SimpleDateFormat("dd-MM-yyyy HH-mm-ss.SSSSSS");
-			String date = simple.format(d);
-			// System.out.println(date);
-			String s1 = comboBoxLevi.getSelectedItem().toString();
-			String s2 = comboBoxDesni.getSelectedItem().toString();
-			String v1 = new String();
-			String v2 = new String();
-			for (int i = 0; i < m.d.size(); i++) {
-				if (s1.equals(m.d.get(i).getName()))
-					v1 = m.d.get(i).getCurrencyId();
-				if (s2.equals(m.d.get(i).getName()))
-					v2 = m.d.get(i).getCurrencyId();
-			}
-			Double val = Double.parseDouble(textFieldLevi.getText());
-			Double r = m.vratiKurs(v1, v2);
-			if (r == -1) {
-				JOptionPane.showMessageDialog(null, "Ne postoje rezultati za zadate valute", "Greska",
-						JOptionPane.ERROR_MESSAGE);
-			}
-			textFieldDesni.setText(String.valueOf(val * r));
-			String zaSer = "{" + "\"datumVreme\"" + ":" + "\"" + date + "\"" + "," + "\"izValuta\"" + ":" + "\"" + v1
-					+ "\"" + "," + "\"uValuta\"" + ":" + "\"" + v2 + "\"" + "," + "\"kurs\"" + ":" + r + "}";
-			serijal(zaSer);
-		} catch (Exception e) {
-			 JOptionPane.showMessageDialog(null, "Unesite iznos za konverziju",
-			 "Paznja", JOptionPane.INFORMATION_MESSAGE);
-		}
-
-	}
-
-	private static void serijal(String zaSer) throws Exception {
-		JsonArray a = new JsonArray();
-		a = deserijal();
-		FileWriter writer = new FileWriter("data/log.json");
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		JsonObject o = gson.fromJson(zaSer, JsonObject.class);
-		
 	
-		if (a == null) {
-			JsonArray b = new JsonArray();
-			b.add(o);
-			writer.write(gson.toJson(b));
-			writer.close();
-		} else {
-			a.add(o);
-			writer.write(gson.toJson(a));
-			writer.close();
-		}
-	}
-
-	private static JsonArray deserijal() throws Exception {
-		FileReader reader = new FileReader("data/log.json");
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		JsonArray a = gson.fromJson(reader, JsonArray.class);
-		return a;
-	}
 }

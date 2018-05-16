@@ -28,5 +28,23 @@
     "izValuta": "BRL",
     "uValuta": "KHR",
     "kurs": 1137.96299
+  },
+  {
+    "datumVreme": "16-05-2018 19-32-25.000075",
+    "izValuta": "AUD",
+    "uValuta": "BRL",
+    "kurs": 2.768174
+  },
+  {
+    "datumVreme": "16-05-2018 19-51-17.000981",
+    "izValuta": "XOF",
+    "uValuta": "CRC",
+    "kurs": 1.013552
+  },
+  {
+    "datumVreme": "16-05-2018 19-57-12.000825",
+    "izValuta": "AUD",
+    "uValuta": "CNY",
+    "kurs": 4.789514
   }
 ]

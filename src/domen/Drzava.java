@@ -1,4 +1,4 @@
-package menjacnica;
+package domen;
 
 public class Drzava {
 	private String alpha3;
